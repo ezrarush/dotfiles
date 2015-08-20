@@ -17,8 +17,18 @@
 ;; replace with use-package package because reasons
 (setq my-package-list '(solarized-theme
 			coffee-mode
-			jump-char))
+			jump-char
+			org-page))
 ;; (mapc #'package-install my-package-list)
+
+(require 'org-page)
+(setq op/repository-directory "~/code/org-page")
+(setq op/site-domain "http://blog.ezrarush.com/")
+;;; for commenting, you can choose either disqus or duoshuo
+(setq op/personal-disqus-shortname "")
+;; (setq op/personal-duoshuo-shortname "your_duoshuo_shortname")
+;;; the configuration below are optional
+(setq op/personal-google-analytics-id "")
 
 ;; ruby syntax checking
 (require 'flymake-ruby)
