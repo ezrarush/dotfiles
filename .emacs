@@ -1,3 +1,9 @@
+(require 'cask "/usr/local/Cellar/cask/0.7.4/cask.el")
+(cask-initialize)
+(require 'pallet)
+(pallet-mode t)
+
+
 (setq user-full-name "Ezra Rush")
 (setq user-mail-address "rushwest@gmail.com")
 
@@ -5,11 +11,16 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
-;; (load "~/.emacs.d/lisp/scratch-message")
+(load "~/.emacs.d/lisp/scratch-message")
+
+(setq mac-option-key-is-meta nil
+      mac-command-key-is-meta t
+      mac-command-modifier 'meta
+      mac-option-modifier 'none)
 
 (require 'package)
-(add-to-list 'package-archives
-  '("marmalade" . "http://marmalade-repo.org/packages/") t)
+;; (add-to-list 'package-archives
+;;   '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
@@ -23,8 +34,32 @@
 			flymake-ruby))
 ;; (mapc #'package-install my-package-list)
 
+;; eshell does not have same env as os term bash
+(setenv "PATH"
+  (concat
+   "/usr/local/bin" ":"
+   (getenv "PATH") ; inherited from OS
+  )
+)
+
+;; Dired tries to guess a default target directory. This means: if there is a Dired buffer displayed in the next window, use its current directory, instead of this Dired buffer's current directory.
+(setq dired-dwim-target t)
+
+;; c-x c-f when point looks like a host address will ping and time out
+;; https://github.com/syl20bnr/spacemacs/issues/2654
+(setq ffap-machine-p-known 'reject)
+
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+
+;; (require 'helm-config)
+;; (helm-mode 1)
+
+(global-set-key (kbd "C-c r r") 'inf-ruby)
+(add-hook 'inferior-ruby-mode-hook 'ansi-color-for-comint-on)
+
 (require 'org-page)
-(setq op/repository-directory "~/code/ezrarush.github.io")
+(setq op/repository-directory "~/code/org-page")
 (setq op/site-domain "http://blog.ezrarush.com/")
 ;;; for commenting, you can choose either disqus or duoshuo
 (setq op/personal-disqus-shortname "")
@@ -44,6 +79,9 @@
 (add-to-list 'auto-mode-alist '("Capfile" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Vagrantfile" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
+
+;; cf needs html highlighting
+(add-to-list 'auto-mode-alist '("\\.cfm" . html-mode))
 
 ;; yaml
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
@@ -252,7 +290,7 @@ FILE has been displayed."
 ;(require 'icicles)
 (icy-mode 1)
 
-;; ;;=========== ParEdit ===========
+;;=========== ParEdit ===========
 
 ;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
 ;; (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
@@ -263,7 +301,7 @@ FILE has been displayed."
 ;; (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
 ;; (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
 
-;; ;; found @ emailataskcom youtube video
+;; found @ emailataskcom youtube video
 
 ;; (defun backward-up-list+ ()
 ;;   "Stupid backward-up-list doesn't work from inside a string and i got tired of having to move outside the string to use it."
@@ -274,9 +312,9 @@ FILE has been displayed."
 ;;     (backward-up-list)))
 
 
-;; ;;=========== Electric RETURN =============
+;;=========== Electric RETURN =============
 
-;; ; I DUNNO IF ALREADY BUILT INTO PAREDIT (prob. is already built-in)
+; I DUNNO IF ALREADY BUILT INTO PAREDIT (prob. is already built-in)
 
 ;; (defvar electrify-return-match
 ;;     "[\]}\)\"]"
@@ -294,10 +332,10 @@ FILE has been displayed."
 ;;       (newline arg)
 ;;       (indent-according-to-mode)))
 
-;; ;; Using local-set-key in a mode-hook is a better idea.
-;;   (global-set-key (kbd "RET") 'electrify-return-if-match)
+;; Using local-set-key in a mode-hook is a better idea.
+  ;; (global-set-key (kbd "RET") 'electrify-return-if-match)
 
-;; ;;========= Lisp env and SLIME ============
+;;========= Lisp env and SLIME ============
 
 ;; (setq inferior-lisp-program "sbcl")
 ;; (load (expand-file-name "~/quicklisp/slime-helper.el"))
@@ -386,15 +424,102 @@ FILE has been displayed."
 ;;       "slime-mode tab dwim, either indent, complete symbol or yas/expand"
 ;;       (interactive)
 ;;       (let ((r (slime-indent-and-complete-symbol)))
-;;         (unless r
-;;           (yas/expand))))
-;;     (defun my-slime-mode-hook ()
-;;       (interactive)
-;;       (define-key slime-mode-map (kbd "<tab>")
-;;         'slime-tab)
-;;       )
-;;     (add-hook 'slime-mode-hook 'my-slime-mode-hook)
+;; ;;         (unless r
+;; ;;           (yas/expand))))
+;; ;;     (defun my-slime-mode-hook ()
+;; ;;       (interactive)
+;; ;;       (define-key slime-mode-map (kbd "<tab>")
+;; ;;         'slime-tab)
+;; ;;       )
+;; ;;     (add-hook 'slime-mode-hook 'my-slime-mode-hook)
 
-;(setq common-lisp-hyperspec-root  "file:/usr/local/doc/HyperSpec/" )
+;; ;(setq common-lisp-hyperspec-root  "file:/usr/local/doc/HyperSpec/" )
 
 (put 'narrow-to-region 'disabled nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   (vector "#eaeaea" "#d54e53" "#b9ca4a" "#e7c547" "#7aa6da" "#c397d8" "#70c0b1" "#000000"))
+ '(compilation-message-face (quote default))
+ '(cua-global-mark-cursor-color "#2aa198")
+ '(cua-normal-cursor-color "#839496")
+ '(cua-overwrite-cursor-color "#b58900")
+ '(cua-read-only-cursor-color "#859900")
+ '(custom-enabled-themes (quote (solarized-dark)))
+ '(custom-safe-themes
+   (quote
+    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" default)))
+ '(fci-rule-color "#424242")
+ '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
+ '(highlight-symbol-colors
+   (--map
+    (solarized-color-blend it "#002b36" 0.25)
+    (quote
+     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
+ '(highlight-symbol-foreground-color "#93a1a1")
+ '(highlight-tail-colors
+   (quote
+    (("#073642" . 0)
+     ("#546E00" . 20)
+     ("#00736F" . 30)
+     ("#00629D" . 50)
+     ("#7B6000" . 60)
+     ("#8B2C02" . 70)
+     ("#93115C" . 85)
+     ("#073642" . 100))))
+ '(hl-bg-colors
+   (quote
+    ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00")))
+ '(hl-fg-colors
+   (quote
+    ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
+ '(icicle-command-abbrev-alist (quote ((ace-jump-word-mode eh 1))))
+ '(magit-diff-use-overlays nil)
+ '(nrepl-message-colors
+   (quote
+    ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
+ '(pos-tip-background-color "#073642")
+ '(pos-tip-foreground-color "#93a1a1")
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
+ '(term-default-bg-color "#002b36")
+ '(term-default-fg-color "#839496")
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#d54e53")
+     (40 . "#e78c45")
+     (60 . "#e7c547")
+     (80 . "#b9ca4a")
+     (100 . "#70c0b1")
+     (120 . "#7aa6da")
+     (140 . "#c397d8")
+     (160 . "#d54e53")
+     (180 . "#e78c45")
+     (200 . "#e7c547")
+     (220 . "#b9ca4a")
+     (240 . "#70c0b1")
+     (260 . "#7aa6da")
+     (280 . "#c397d8")
+     (300 . "#d54e53")
+     (320 . "#e78c45")
+     (340 . "#e7c547")
+     (360 . "#b9ca4a"))))
+ '(vc-annotate-very-old-color nil)
+ '(weechat-color-list
+   (quote
+    (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83")))
+ '(xterm-color-names
+   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
+ '(xterm-color-names-bright
+   ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
