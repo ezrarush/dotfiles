@@ -1,11 +1,11 @@
 (setq user-full-name "Ezra Rush")
 (setq user-mail-address "rushwest@gmail.com")
 
-(setq default-directory "C:/home/" )
+;; (setq default-directory "C:/home/" )
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
-(load "~/.emacs.d/lisp/scratch-message")
+;; (load "~/.emacs.d/lisp/scratch-message")
 
 (require 'package)
 (add-to-list 'package-archives
@@ -18,11 +18,13 @@
 (setq my-package-list '(solarized-theme
 			coffee-mode
 			jump-char
-			org-page))
+			org-page
+		        icicles
+			flymake-ruby))
 ;; (mapc #'package-install my-package-list)
 
 (require 'org-page)
-(setq op/repository-directory "~/code/org-page")
+(setq op/repository-directory "~/code/ezrarush.github.io")
 (setq op/site-domain "http://blog.ezrarush.com/")
 ;;; for commenting, you can choose either disqus or duoshuo
 (setq op/personal-disqus-shortname "")
@@ -57,14 +59,14 @@
 (add-hook 'coffee-mode-hook 'coffee-custom)
 
 ;; chicken scheme slime
-(add-to-list 'load-path "/var/lib/chicken/6/")   ; Where Eggs are installed
-(autoload 'chicken-slime "chicken-slime" "SWANK backend for Chicken" t)
+;; (add-to-list 'load-path "/var/lib/chicken/6/")   ; Where Eggs are installed
+;; (autoload 'chicken-slime "chicken-slime" "SWANK backend for Chicken" t)
 
 ;; We also want to enable the SLIME minor mode in Scheme files:
 
-(add-hook 'scheme-mode-hook
-          (lambda ()
-           (slime-mode t)))
+;; (add-hook 'scheme-mode-hook
+;;           (lambda ()
+;;            (slime-mode t)))
 
 
 ;;
@@ -147,7 +149,7 @@
       (set-window-dedicated-p (selected-window) t)
       (other-window 1))))
 
-(global-set-key (kbd "<f8>") 'slime-switch-to-output-buffer)
+;; (global-set-key (kbd "<f8>") 'slime-switch-to-output-buffer)
 
 ;; <f1> is for help, home-row C-h is better used as delete
 (keyboard-translate ?\C-h ?\C-?)
@@ -250,76 +252,76 @@ FILE has been displayed."
 ;(require 'icicles)
 (icy-mode 1)
 
-;;=========== ParEdit ===========
+;; ;;=========== ParEdit ===========
 
-(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-(add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+;; (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+;; (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+;; (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+;; (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+;; (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+;; (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+;; (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
 
-;; found @ emailataskcom youtube video
+;; ;; found @ emailataskcom youtube video
 
-(defun backward-up-list+ ()
-  "Stupid backward-up-list doesn't work from inside a string and i got tired of having to move outside the string to use it."
-  (interactive)
-  (if (in-string-p)
-      (while (in-string-p)
-	(backward-char))
-    (backward-up-list)))
+;; (defun backward-up-list+ ()
+;;   "Stupid backward-up-list doesn't work from inside a string and i got tired of having to move outside the string to use it."
+;;   (interactive)
+;;   (if (in-string-p)
+;;       (while (in-string-p)
+;; 	(backward-char))
+;;     (backward-up-list)))
 
 
-;;=========== Electric RETURN =============
+;; ;;=========== Electric RETURN =============
 
-; I DUNNO IF ALREADY BUILT INTO PAREDIT (prob. is already built-in)
+;; ; I DUNNO IF ALREADY BUILT INTO PAREDIT (prob. is already built-in)
 
-(defvar electrify-return-match
-    "[\]}\)\"]"
-    "If this regexp matches the text after the cursor, do an \"electric\"
-  return.")
+;; (defvar electrify-return-match
+;;     "[\]}\)\"]"
+;;     "If this regexp matches the text after the cursor, do an \"electric\"
+;;   return.")
  
-(defun electrify-return-if-match (arg)
-    "If the text after the cursor matches `electrify-return-match' then
-  open and indent an empty line between the cursor and the text.  Move the
-  cursor to the new line."
-    (interactive "P")
-    (let ((case-fold-search nil))
-      (if (looking-at electrify-return-match)
-	  (save-excursion (newline-and-indent)))
-      (newline arg)
-      (indent-according-to-mode)))
+;; (defun electrify-return-if-match (arg)
+;;     "If the text after the cursor matches `electrify-return-match' then
+;;   open and indent an empty line between the cursor and the text.  Move the
+;;   cursor to the new line."
+;;     (interactive "P")
+;;     (let ((case-fold-search nil))
+;;       (if (looking-at electrify-return-match)
+;; 	  (save-excursion (newline-and-indent)))
+;;       (newline arg)
+;;       (indent-according-to-mode)))
 
-;; Using local-set-key in a mode-hook is a better idea.
-  (global-set-key (kbd "RET") 'electrify-return-if-match)
+;; ;; Using local-set-key in a mode-hook is a better idea.
+;;   (global-set-key (kbd "RET") 'electrify-return-if-match)
 
-;;========= Lisp env and SLIME ============
+;; ;;========= Lisp env and SLIME ============
 
-(setq inferior-lisp-program "sbcl")
-(load (expand-file-name "~/quicklisp/slime-helper.el"))
+;; (setq inferior-lisp-program "sbcl")
+;; (load (expand-file-name "~/quicklisp/slime-helper.el"))
 
-;; Tell Emacs how to auto-load SLIME when needed 
-(when (load "slime-autoloads" t)
-  (setq slime-auto-connect 'always)
-  (slime-setup '(slime-fancy slime-asdf inferior-slime)))
+;; ;; Tell Emacs how to auto-load SLIME when needed 
+;; (when (load "slime-autoloads" t)
+;;   (setq slime-auto-connect 'always)
+;;   (slime-setup '(slime-fancy slime-asdf inferior-slime)))
 
-;;     Making slime connect to your lisp automatically when you open a lisp file.
+;; ;;     Making slime connect to your lisp automatically when you open a lisp file.
 
-;; (defun cliki:start-slime ()
-;;   (unless (slime-connected-p)
-;;     (save-excursion (slime))))
+;; ;; (defun cliki:start-slime ()
+;; ;;   (unless (slime-connected-p)
+;; ;;     (save-excursion (slime))))
 
-;; (add-hook 'slime-mode-hook 'cliki:start-slime)
+;; ;; (add-hook 'slime-mode-hook 'cliki:start-slime)
 
 
-;; Stop SLIME's REPL from grabbing DEL,
-;; which is annoying when backspacing over a '('
-(defun override-slime-repl-bindings-with-paredit ()
-  (define-key slime-repl-mode-map
-    (read-kbd-macro paredit-backward-delete-key) nil))
-(add-hook 'slime-repl-mode-hook 'override-slime-repl-bindings-with-paredit)
+;; ;; Stop SLIME's REPL from grabbing DEL,
+;; ;; which is annoying when backspacing over a '('
+;; (defun override-slime-repl-bindings-with-paredit ()
+;;   (define-key slime-repl-mode-map
+;;     (read-kbd-macro paredit-backward-delete-key) nil))
+;; (add-hook 'slime-repl-mode-hook 'override-slime-repl-bindings-with-paredit)
 
 ;;Fontify *SLIME Description* buffer for SBCL
 ;; (defun slime-description-fontify ()
