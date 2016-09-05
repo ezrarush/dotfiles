@@ -105,4 +105,5 @@ system that works - John Gall\n"
 				     ";;The key in making great and growable systems is much more to design how its modules communicate rather than what their internal properties and behaviors should be\n"
 				     ";;We should be taught not to wait for inspiration to start a thing. Action always generates inspiration. Inspiration seldom generates action. —Frank Tibolt\n"
 				     ";;a value never changes. People do.\n"
+				     ";;Ever honor the whole; individuals only I honor; In individuals I always discover the whole. - Schiller"
 				     )))
